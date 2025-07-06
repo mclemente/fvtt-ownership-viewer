@@ -9,10 +9,18 @@ class OwnershipViewer {
 
 		// Determine if we are working with a directory or a journal sheet
 		const isJournalSheet = obj instanceof foundry.appv1.sheets.JournalSheet;
+		const isJournalEntrySheet = obj instanceof foundry.applications.sheets.journal.JournalEntrySheet;
 
 		// Gather all documents in the current directory or journal
-		const collection = isJournalSheet ? obj.object.collections.pages : obj.options.collection;
-		const query = `li.directory-item${isJournalSheet ? ".level1" : ".document"}`;
+		let collection = obj.options.collection;
+		let query = "li.directory-item.document";
+		if (isJournalSheet) {
+			collection = obj.object.collections.pages
+			query = "li.directory-item.level1";
+		} else if (isJournalEntrySheet) {
+			collection = data.document.collections.pages
+			query = "li.level1";
+		}
 		const documentList = isJournalSheet ? html.find(query) : html.querySelectorAll(query);
 
 		const { INHERIT, NONE } = CONST.DOCUMENT_OWNERSHIP_LEVELS;
@@ -20,7 +28,7 @@ class OwnershipViewer {
 		// Interate through each directory list item.
 		for (let li of documentList) {
 			// Match it to the corresponding document
-			const doc = collection.get(li.dataset[`${isJournalSheet ? "page" : "entry"}Id`]);
+			const doc = collection.get(li.dataset[`${isJournalSheet || isJournalEntrySheet ? "page" : "entry"}Id`]);
 			const users = [];
 
 			// Iterate through each ownership definition on the document
@@ -84,7 +92,7 @@ class OwnershipViewer {
 				users.forEach(user => div.appendChild(user));
 			}
 
-			if (isJournalSheet) {
+			if (isJournalSheet || isJournalEntrySheet) {
 				li.querySelector(".page-ownership")?.remove();
 				for (const heading of li.querySelectorAll(".page-heading")) {
 					// heading.appendChild(div);
@@ -104,7 +112,7 @@ class OwnershipViewer {
 				if (li) ownershipOption.callback(li);
 			}
 
-			if (isJournalSheet) {
+			if (isJournalSheet || isJournalEntrySheet) {
 				// On journal sheets, delay registering click events until the page is selected and its header is expanded
 				Hooks.once("renderJournalEntryPageSheet", () => {
 					html.find(".ownership-viewer").on("click", clickEvent);
@@ -145,6 +153,7 @@ class OwnershipViewer {
 }
 
 Hooks.on("renderJournalSheet", OwnershipViewer.directoryRendered);
+Hooks.on("renderJournalEntrySheet", OwnershipViewer.directoryRendered);
 Hooks.on("renderJournalDirectory", OwnershipViewer.directoryRendered);
 Hooks.on("renderActorDirectory", OwnershipViewer.directoryRendered);
 Hooks.on("renderItemDirectory", OwnershipViewer.directoryRendered);
