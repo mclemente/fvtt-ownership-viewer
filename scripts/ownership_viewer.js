@@ -16,10 +16,10 @@ class OwnershipViewer {
 		let query = "li.directory-item.document";
 		if (isJournalSheet) {
 			collection = obj.object.collections.pages
-			query = "li.directory-item.level1";
+			query = "li.directory-item[data-page-id]";
 		} else if (isJournalEntrySheet) {
 			collection = data.document.collections.pages
-			query = "li.level1";
+			query = "li[data-page-id]";
 		}
 		const documentList = isJournalSheet ? html.find(query) : html.querySelectorAll(query);
 
