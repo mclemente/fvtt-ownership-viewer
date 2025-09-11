@@ -21,7 +21,9 @@ class OwnershipViewer {
 			collection = data.document.collections.pages
 			query = "li.level1";
 		}
-		const documentList = isJournalSheet ? html.find(query) : html.querySelectorAll(query);
+		const documentList = html.find(
+		  isJournalSheet ? 'li.directory-item[data-page-id]' : 'li.directory-item.document'
+		);
 
 		const { INHERIT, NONE } = CONST.DOCUMENT_OWNERSHIP_LEVELS;
 
