@@ -114,13 +114,11 @@ class OwnershipViewer {
 
 			if (isJournalSheet || isJournalEntrySheet) {
 				// On journal sheets, delay registering click events until the page is selected and its header is expanded
-				Hooks.once("renderJournalEntryPageSheet", () => {
-					html.find(".ownership-viewer").on("click", clickEvent);
+				Hooks.once("renderJournalEntrySheet", () => {
+					html.querySelectorAll(".ownership-viewer")?.forEach((el) => {
+						el.addEventListener("click", clickEvent);
+					});
 				});
-			} else {
-				html.querySelectorAll(".ownership-viewer")?.forEach((el) => {
-					el.addEventListener("click", clickEvent);
-				})
 			}
 		}
 	}
