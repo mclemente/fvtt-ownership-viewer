@@ -115,10 +115,20 @@ class OwnershipViewer {
 			if (isJournalSheet || isJournalEntrySheet) {
 				// On journal sheets, delay registering click events until the page is selected and its header is expanded
 				Hooks.once("renderJournalEntrySheet", () => {
-					html.querySelectorAll(".ownership-viewer")?.forEach((el) => {
+					const ownershipElements = html.querySelectorAll?.(".ownership-viewer")
+						?? html.find?.(".ownership-viewer")?.toArray()
+						?? [];
+					for (const el of ownershipElements) {
 						el.addEventListener("click", clickEvent);
-					});
+					}
 				});
+			} else {
+				const ownershipElements = html.querySelectorAll?.(".ownership-viewer")
+					?? html.find?.(".ownership-viewer")?.toArray()
+					?? [];
+				for (const el of ownershipElements) {
+					el.addEventListener("click", clickEvent);
+				}
 			}
 		}
 	}
