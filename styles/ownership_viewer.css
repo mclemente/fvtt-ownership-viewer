@@ -3,14 +3,16 @@ aside.journal-sidebar.collapsed div.ownership-viewer {
 }
 
 div.ownership-viewer {
-	max-width: max-content;
-	margin: auto 5px;
-	line-height: initial;
-	display: block ruby;
+	display: flex;
+	align-items: center;
+	flex: 0 0 auto;
+	margin: auto 5px auto auto;
+	line-height: 1;
 }
 
 div.ownership-viewer > div {
 	display: inline-flex;
+	align-items: center;
 	cursor: pointer;
 }
 
